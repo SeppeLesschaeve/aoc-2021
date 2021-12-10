@@ -23,6 +23,6 @@ calculate80 fishes = calculate80Helper 0 fishes
 
 main :: IO Int
 main = do
-  myFile <- openFile "input6.txt" ReadMode
+  myFile <- openFile "input06.txt" ReadMode
   content <- hGetContents myFile
   return (calculate80 (getLanternFishes content))

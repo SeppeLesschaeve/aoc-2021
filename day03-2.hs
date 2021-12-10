@@ -58,6 +58,6 @@ getLife m = (getOxygen m) * (getCO2 m)
 
 main :: IO Int
 main = do
-  myFile <- openFile "input3.txt" ReadMode
+  myFile <- openFile "input03.txt" ReadMode
   content <- hGetContents myFile
   return (getLife (lines content))

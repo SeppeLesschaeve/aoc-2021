@@ -31,6 +31,6 @@ getFuel positions = getMinimalPos (getAllPossiblePositions positions) positions 
 
 main :: IO (Int,Int)
 main = do
-  myFile <- openFile "input7.txt" ReadMode
+  myFile <- openFile "input07.txt" ReadMode
   content <- hGetContents myFile
   return (getFuel (getPositions content))

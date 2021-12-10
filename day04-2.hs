@@ -95,6 +95,6 @@ getFinalScore (n, card) = n * (getSumOfUnmarkedCard card)
 
 main :: IO Int
 main = do
-  myFile <- openFile "input4.txt" ReadMode
+  myFile <- openFile "input04.txt" ReadMode
   content <- hGetContents myFile
   return (getFinalScore (getLastWinning (getContent content)))

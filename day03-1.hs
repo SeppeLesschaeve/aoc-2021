@@ -34,6 +34,6 @@ getPower m = getPowerHelper (transpose m) "" ""
 
 main :: IO Int
 main = do
-  myFile <- openFile "input3.txt" ReadMode
+  myFile <- openFile "input03.txt" ReadMode
   content <- hGetContents myFile
   return (getPower (lines content))

@@ -37,6 +37,6 @@ calculate256 fishes stack total = iterateDays newStack 256 total
 
 main :: IO Int
 main = do
-  myFile <- openFile "input6.txt" ReadMode
+  myFile <- openFile "input06.txt" ReadMode
   content <- hGetContents myFile
   return (calculate256 (getLanternFishes content) [[0],[0],[0],[0],[0],[0],[0],[0],[0]] (length (getLanternFishes content))) 

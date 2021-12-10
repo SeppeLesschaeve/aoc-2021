@@ -37,6 +37,6 @@ countAmountOf1478 (digit:digits) amount
   
 main :: IO Int
 main = do
-  myFile <- openFile "input8.txt" ReadMode
+  myFile <- openFile "input08.txt" ReadMode
   content <- hGetContents myFile
   return (countAmountOf1478 (getCodedDigits content) 0)   

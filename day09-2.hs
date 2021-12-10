@@ -47,31 +47,49 @@ isLowPoint height heightMatrix rowIndex colIndex
     l = colIndex - 1
     r = colIndex + 1
 
-getLowPointsRow :: [Int] -> [[Int]] -> Int -> Int -> [Int]
+getLowPointsRow :: [Int] -> [[Int]] -> Int -> Int -> [(Int,Int,Int)]
 getLowPointsRow [] _ _ _ = []
 getLowPointsRow (height:heights) heightMatrix rowIndex colIndex
-  | isLowPoint height heightMatrix rowIndex colIndex = height:remainingLowPoints
+  | isLowPoint height heightMatrix rowIndex colIndex = (rowIndex,colIndex,height):remainingLowPoints
   | otherwise = remainingLowPoints
   where remainingLowPoints = getLowPointsRow heights heightMatrix rowIndex (colIndex + 1) 
 
-getLowPointsHelper :: [[Int]] -> [[Int]] -> Int -> [Int] -> [Int]
+getLowPointsHelper :: [[Int]] -> [[Int]] -> Int -> [(Int,Int,Int)] -> [(Int,Int,Int)]
 getLowPointsHelper [] _ _ lowPoints = lowPoints
 getLowPointsHelper (row:rows) heights rowIndex lowPoints = getLowPointsHelper rows heights (rowIndex + 1) newLowPoints
-  where newLowPoints = (getLowPointsRow row heights rowIndex 0) ++ lowPoints   
+  where newLowPoints = (getLowPointsRow row heights rowIndex 0) ++ lowPoints
 
-
-incrementHeight :: Int -> Int
-incrementHeight height = height + 1
-
-getLowPoints :: String -> Int
-getLowPoints s = sum ( map incrementHeight lowPoints)
+getBassin :: [[Int]] -> [(Int, Int)] -> Int -> Int -> Int -> Int -> (Int, [(Int,Int)])
+getBassin heightMatrix seenHeights n m rowIndex colIndex 
+  | (rowIndex < 0) || (rowIndex >= (n+1)) || (colIndex < 0) || (colIndex >= (m+1)) || (elem (rowIndex, colIndex) seenHeights) || (heightMatrix!!rowIndex!!colIndex == 9) = (0,seenHeights)
+  | otherwise = (1 + rightSize + leftSize + upperSize + lowerSize, newSeenLower)
   where 
-     heights = getMatrix s
-     lowPoints = getLowPointsHelper heights heights 0 []
+    newSeenHeights = (rowIndex, colIndex):seenHeights
+    (rightSize,newSeenRight) = getBassin heightMatrix newSeenHeights n m (rowIndex + 1) colIndex
+    (leftSize,newSeenLeft) = getBassin heightMatrix newSeenRight n m (rowIndex - 1) colIndex
+    (upperSize,newSeenUpper) = getBassin heightMatrix newSeenLeft n m rowIndex (colIndex - 1)
+    (lowerSize,newSeenLower) = getBassin heightMatrix newSeenUpper n m rowIndex (colIndex + 1)
+
+
+getBassins :: [(Int,Int,Int)] -> [[Int]] -> [(Int, Int)] -> [Int]
+getBassins [] _ _ = []
+getBassins ((lowX, lowY, lowHeight):lowPoints) heightMatrix seenHeights = (bassinSize):(getBassins lowPoints heightMatrix newSeenHeights) 
+  where  
+    (bassinSize, newSeenHeights) = getBassin heightMatrix seenHeights n m lowX lowY 
+    m = (length (head heightMatrix)) - 1
+    n = (length heightMatrix) - 1
+
+getMultiplyOfThreeBassins :: String -> Int
+getMultiplyOfThreeBassins s = (bassins!!0) * (bassins!!1) * (bassins!!2)  
+  where 
+     heightMatrix = getMatrix s
+     m = (length (head heightMatrix)) - 1
+     n = (length heightMatrix) - 1
+     lowPoints = getLowPointsHelper heightMatrix heightMatrix 0 []
+     bassins = sortBy (flip compare) (getBassins lowPoints heightMatrix [])
 
 main :: IO Int
 main = do
-  myFile <- openFile "input9.txt" ReadMode
+  myFile <- openFile "input09.txt" ReadMode
   content <- hGetContents myFile
-  return (getLowPoints content)
-  
+  return (getMultiplyOfThreeBassins content)

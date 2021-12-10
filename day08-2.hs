@@ -116,6 +116,6 @@ getSumOfOutputs s = getSumOfOutputsHelper (getCodedInputsHelper (lines s)) 0
 
 main :: IO Int
 main = do
-  myFile <- openFile "input8.txt" ReadMode
+  myFile <- openFile "input08.txt" ReadMode
   content <- hGetContents myFile
   return (getSumOfOutputs content)  

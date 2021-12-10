@@ -21,6 +21,6 @@ getMultipleHD (dir:am:xs) hor depth
 
 main :: IO Int
 main = do
-  myFile <- openFile "input2.txt" ReadMode
+  myFile <- openFile "input02.txt" ReadMode
   content <- hGetContents myFile
   return (getMultipleHD (getContent content) 0 0)

@@ -67,25 +67,8 @@ markVentLineVertical (row:rows) ((x1,y1),(x2,y2))
     xEnd   = maximum [x1,x2]
     remainingMark = (markVentLineVertical rows ((x1,y1),(x2,y2))) 
   
-getAllDiagonalElems :: ( (Int,Int) , (Int,Int)) -> [(Int,Int)]
-getAllDiagonalElems ((x1,y1),(x2,y2)) 
-  | (x1 == x2) && (y1 == y2) = [(x1,y1)]
-  | x1 > x2 = getAllDiagonalElems ((x2,y2),(x1,y1))
-  | (x1 < x2) && (y1 < y2) = (x1,y1):(getAllDiagonalElems ((x1+1,y1+1),(x2,y2)))
-  | (x1 < x2) && (y1 > y2) = (x1,y1):(getAllDiagonalElems ((x1+1,y1-1),(x2,y2)))
-
-markVentLineDiagonal :: [(Int,Int)] -> [[(Int,Int,Int)]] ->[[(Int,Int,Int)]] 
-markVentLineDiagonal [] ventLineList = ventLineList
-markVentLineDiagonal ((x,y):diagElems) ventLineList = markVentLineDiagonal diagElems newVentLineList
-  where
-    newVentLineList = markVentLineHorizontal ventLineList ((x,y),(x,y)) 
-  
-isDiagonal :: ((Int,Int), (Int,Int)) -> Bool
-isDiagonal ((x1,y1),(x2,y2)) = abs (x2 - x1) == abs (y2 - y1)
-  
 markVentLine :: ((Int,Int), (Int,Int)) -> [[(Int,Int,Int)]] -> [[(Int,Int,Int)]]
 markVentLine ((x1,y1),(x2,y2)) ventLineList 
-  | isDiagonal ((x1,y1),(x2,y2)) = markVentLineDiagonal (getAllDiagonalElems ((x1,y1),(x2,y2))) ventLineList
   | x1 == x2 = markVentLineHorizontal ventLineList ((x1,y1),(x2,y2))
   | y1 == y2 = markVentLineVertical ventLineList ((x1,y1),(x2,y2))
   | otherwise = ventLineList
@@ -110,7 +93,7 @@ getMultipleOverlaps ventLines = getMultipleOverlapsHelper ventLines (emptyVentLi
 
 main :: IO Int
 main = do
-  myFile <- openFile "input5.txt" ReadMode
+  myFile <- openFile "input05.txt" ReadMode
   content <- hGetContents myFile
   return (getMultipleOverlaps (getVentLines content))
   
